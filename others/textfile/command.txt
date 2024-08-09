@@ -1,0 +1,24 @@
+c++のcoderunnerを走らせる：control + option + N
+c++のcoderunnerを強制中断する：control + shift + Q
+コードテストをする:control + T
+コードを提出する:control + S
+コード実行の中断:control + C
+次のブックマークの行に飛ぶ: option + command + L
+前のブックマークの行に飛ぶ: option + command + J
+その行をブックマークに追加: option + command + K
+コードの整形: Shift + Option + F
+コード内の検索: command + F
+コード内の文字の置換: option + command + F
+c++ 高速なコンパイル: g++ -O3 filename.cpp -o filename //Oは大文字オー
+    → ./filename
+
+
+githubにファイルを上げる手順
+cd /Users/kaiwa/atcoder-workspace/Library
+git init 
+git add -A
+git commit -m 'message'
+(git remote add origin https://github.com/Katu2ou/Cpro-Library.git) (2回目以降は不要)
+git push origin master
+(Katu2ou/password(キーチェーンアクセスにある))の入力
+

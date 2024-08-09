@@ -1,0 +1,134 @@
+//base2out//
+cout<<bitset<8>(21); //(=00010101)
+//base2ex//
+43=0b101011
+//dight n ?1//
+if(bit&(1<<n))
+//make1//
+bit |= (1<<i)
+//delete1//
+bit &= ~(1<<i)
+//count1//
+ll k=_builtin_popcount(bit)
+//inverse//
+bit=~bit
+
+//random//
+unsigned int randint(){
+	static unsigned int tx=123456789,ty=3622436069, tz=521288629, tw=88675123;
+	unsigned int tt=(tx^(tx<<11));
+	tx=ty; ty=tz; tz=tw;
+	return (tw=(tw^(tw>>19))^(tt^(tt>>8)));
+}
+
+
+//bitsetを用いない時のいろいろ
+int bitlen(ll n){
+	if(n==0)return 1;
+	int cnt=0;
+	while(n>0){n/=2; cnt++;}
+	return cnt;
+}
+
+//nのkbit目
+#define bit(n,k) ((n>>k)&1)
+
+
+//bitを用いた集合の表現
+
+//包含関係(UがTを含むか否か)
+if(~U&T==0)
+
+//ある部分集合Tの部分集合U全体を渡る
+for(int U=(1<<num)-1;U>=0;U--){
+	U &= T;
+	//単に処理を書く。これでUはTの部分集合全体をもれなく一度ずつ通る。
+}
+//集合に対して、その部分集合全体を探査するようなDPを考えると、上の方法でO(3^N)で解ける。
+//高速ゼータ変換などを用いるとO(N2^N)まで早くなる
+//(https://primenumber.hatenadiary.jp/entry/2016/12/01/000000)
+
+//ある集合Tを部分集合に持つ集合i全体を渡る
+for (int i = T; i < (1 << num); i=(i+1)|T) {
+  // ここに処理を書く
+}
+
+//0から2^n-1までの要素を、立っているフラグの個数が少ない順に動く
+
+
+//要素数kの部分集合T全体を渡る
+int x, y;
+for (int T = (1 << k) - 1; T < (1 << N); x = T & -T, y = T + x, T = (((T & ~y) / x) >> 1) | y) {
+  // ここに処理を書く
+}
+
+
+//bitsetを用いたいろいろ
+
+//定義
+bitset<8> a; //長さ8のビット列を持つ変数aを定義
+bitset<4> b("1110"); //ビット列を指定して定義
+//ビット数(8,4)に変数を指定することはできない 十分大きい値をとっておけば良い
+
+//演算
+bitset<8> a("00011011");
+bitset<8> b("00110101");
+ 
+auto c = a & b;
+cout << c << endl;  
+cout << (c<<1) << endl;
+
+c ^= bitset<8>("11010000");
+//ビット演算に関する演算子は優先度が低いので、カッコを忘れない
+if((a & b) > 0) cout << a << endl;
+
+//bitset高速化(bitのand,or演算は桁数によらずO(1)くらいでできるため、
+//最大で約64倍高速化できる)
+
+//関数
+bitset<4> S;
+
+S.set(3,1); //Sの3番目のビットを1にする
+S.set(3); //Sの3番目のビットを1にする
+S.set(); //Sの全ビットを1にする
+
+S.reset(3); //Sの3番目のビットを0にする
+S.reset(); //Sの全ビットを0にする
+
+S.test(2) //Sの2番目のビットが1になっているかを判定する
+S.all() //Sの全てのビットが1になっているかを判定する
+S.any() //Sのいずれかのビットが1になっているかを判定する
+
+S.flip(3); //Sの3番目のビットを反転する
+S.flip(); //Sの全てのビットを反転する
+
+S.count(); //Sの1になっているビットの数を数える
+S.to_string(); //Sを文字列化する
+S[3]; //Sの3番目のビットに対するアクセス
+
+//bitのi番目とは
+int n=7;
+bitset<4> S(n); //S=0111
+cout<<S[0]<<endl; //1
+//つまりSのi番目はSの右からi+1番目のbitになる(右から数えるのに注意!)
+
+//bit全探索
+for (int tmp = 0; tmp < (1 << 25); tmp++) {
+  bitset<25> s(tmp);
+  // (ビット列sに対する処理)
+  for(int i=0; i<25;i++){
+	if(s.test(i)){
+		//hoge
+	} //tmpの各桁のbitが1なら...
+  }
+
+}
+
+//整数との変換
+int n=10;
+bitset<4> S(n) //整数をbitsetにする
+cout<<S<<endl; //1010
+
+ll m=S.to_ullong(); //bitsetを整数にする
+
+

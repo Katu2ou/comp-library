@@ -1,0 +1,24 @@
+[Dirichlet積] (https://maspypy.com/dirichlet-%e7%a9%8d%e3%81%a8%e3%80%81%e6%95%b0%e8%ab%96%e9%96%a2%e6%95%b0%e3%81%ae%e7%b4%af%e7%a9%8d%e5%92%8c)
+a(N),b(N):　数論関数
+c = \sum_{ij=N} a(i)*b(j) : ディリクレ積
+
+    - c(1), ... ,c(n) を求める -> 愚直O(NlogN)
+        - aが乗法的関数 -> O(NloglogN)
+        - cが乗法的関数(特にa,bが乗法的関数) -> O(N)
+
+    - C(N)=\sum_{i=1}^N c(i) を求める-> a,b,A,Bが与えられて O(\sqrt{N})
+        - ij\leq N を満たすi,jに対するa(i)b(j)の総和
+        - これは1\leq i \leq \sqrt{N} とそれ以外に分けて計算できることから
+
+    - c=a*b とし，次の形のものが全て計算されているとする．
+        - 1 <= i <= \sqrt{N}となるiに対するa(i),b(i)
+        - 1 <= i <= \sqrt{N}となるiに対するA(N/i),B(N/i)
+    このとき，次のもの全てが合計O(N^{3/4})時間で計算できる
+        - 1 <= i <= \sqrt{N}となるiに対するc(i)
+        - 1 <= i <= \sqrt{N}となるiに対するC(N/i)
+    この計算量はより落とせる 
+
+    - ディリクレ積の除算もO(N^{2/3})程度でできる
+
+(Dirichlet級数の例)
+    - 
