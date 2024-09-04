@@ -1,5 +1,5 @@
 //base2out//
-cout<<bitset<8>(21); //(=00010101)
+cout << bitset<8>(21); //(=00010101)
 //base2ex//
 43=0b101011
 //dight n ?1//
@@ -9,7 +9,7 @@ bit |= (1<<i)
 //delete1//
 bit &= ~(1<<i)
 //count1//
-ll k=_builtin_popcount(bit)
+ll k=__builtin_popcount(bit)
 //inverse//
 bit=~bit
 
@@ -61,7 +61,6 @@ int x, y;
 for (int T = (1 << k) - 1; T < (1 << N); x = T & -T, y = T + x, T = (((T & ~y) / x) >> 1) | y) {
   // ここに処理を書く
 }
-
 
 //bitsetを用いたいろいろ
 

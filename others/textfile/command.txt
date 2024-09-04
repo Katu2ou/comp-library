@@ -1,5 +1,7 @@
+<エディタ>
 c++のcoderunnerを走らせる：control + option + N
 c++のcoderunnerを強制中断する：control + shift + Q
+コンパイル+入出力テスト:control + option + N
 コードテストをする:control + T
 コードを提出する:control + S
 コード実行の中断:control + C
@@ -7,10 +9,25 @@ c++のcoderunnerを強制中断する：control + shift + Q
 前のブックマークの行に飛ぶ: option + command + J
 その行をブックマークに追加: option + command + K
 コードの整形: Shift + Option + F
+c++ 高速なコンパイル: g++ -O3 filename.cpp -o filename //Oは大文字オー
+    → ./<filename>
+コマンドパレット: shift + command + P
+
+<ショートカット集>
+範囲選択: shift + 矢印
 コード内の検索: command + F
 コード内の文字の置換: option + command + F
-c++ 高速なコンパイル: g++ -O3 filename.cpp -o filename //Oは大文字オー
-    → ./filename
+    - 選んでいる範囲のみに置換対象を絞る: option + command + L
+    - 選択範囲を全置換: command + enter
+コードの最上(下左右)に移動: command + 矢印
+    - そこまでの範囲を全選択: command + shift + 矢印
+
+<ターミナル>
+コンパイル: g++ <コンパイルオプション> main.cpp(コンパイルするファイルの名前) -o a.out(作成されるファイルの名前)
+実行時間測定: コンパイル->timeをつけて実行
+入力ファイルと出力ファイルを指定: ./main.out < input.txt > output.txt
+
+
 
 
 githubにファイルを上げる手順
@@ -21,4 +38,12 @@ git commit -m 'message'
 (git remote add origin https://github.com/Katu2ou/Cpro-Library.git) (2回目以降は不要)
 git push origin master
 (Katu2ou/password(キーチェーンアクセスにある))の入力
+
+(2回目以降)
+cd <対象となるディレクトリ>
+git add . 
+git commit im "message"
+git push
+
+
 
