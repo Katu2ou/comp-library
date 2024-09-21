@@ -17,6 +17,16 @@ long long random_uniform(long long n) {
     return dist(mt);
 }
 
+/*
+ll rand_int(ll l, ll r) { //[l, r]
+	//#ifdef LOCAL
+	static mt19937_64 gen;
+	/*#else
+	static mt19937_64 gen(chrono::steady_clock::now().time_since_epoch().count());
+	#endif
+	return uniform_int_distribution<ll>(l, r)(gen);
+*/
+
 //Modpow(a,2,mod)と書かずにModpow(a,(ll)2,mod)と書く!
 ll Modpow(__int128_t a, ll n, ll mo) {
 	__int128_t r=1;

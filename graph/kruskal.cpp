@@ -38,16 +38,7 @@ private:
 	std::vector<int> m_parentsOrSize;
 };
 
-//Edge A ={1,2,10,0};など
-struct Edge {
-  int u, v;
-  long long cost;
-  int index; // 辺の番号
-  int color; //辺の属性
-  bool operator < (Edge const& o) {// 辺の重みで順序を定義
-    return cost < o.cost;
-  }
-};
+
 //　N は頂点数
 // edges は辺のリスト
 // 辺は無向を想定していて、edgesには片方向のみいれれば良い
@@ -57,8 +48,8 @@ vector<Edge> Kruskal(int N, vector<Edge> edges) {
   sort(edges.begin(), edges.end());// コストの昇順にソート
   
   for (Edge &e : edges) {
-    if (uf.connected(e.u, e.v)) continue;// 閉路ができる場合は何もしない
-    uf.merge(e.u, e.v);// 閉路ができないなら、採用
+    if (uf.connected(e.from, e.to)) continue;// 閉路ができる場合は何もしない
+    uf.merge(e.from, e.to);// 閉路ができないなら、採用
     tree_edges.push_back(e);
   }
   if(uf.size(0)<N){ //連結にならなかったら、空のvectorを返す

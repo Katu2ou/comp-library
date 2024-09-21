@@ -138,95 +138,62 @@ struct Matrix {
   }
 };
 
+template <typename T>
+std::pair<int, T> GaussElimination(vector<vector<T>> &a, int pivot_end = -1,
+                                   bool diagonalize = false) {
+  if (a.empty()) return {0, 1};
+  int H = a.size(), W = a[0].size(), rank = 0;
+  if (pivot_end == -1) pivot_end = W;
+  T det = 1;
+  for (int j = 0; j < pivot_end; j++) {
+    int idx = -1;
+    for (int i = rank; i < H; i++) {
+      if (a[i][j] != T(0)) {
+        idx = i;
+        break;
+      }
+    }
+    if (idx == -1) {
+      det = 0;
+      continue;
+    }
+    if (rank != idx) det = -det, swap(a[rank], a[idx]);
+    det *= a[rank][j];
+    if (diagonalize && a[rank][j] != T(1)) {
+      T coeff = T(1) / a[rank][j];
+      for (int k = j; k < W; k++) a[rank][k] *= coeff;
+    }
+    int is = diagonalize ? 0 : rank + 1;
+    for (int i = is; i < H; i++) {
+      if (i == rank) continue;
+      if (a[i][j] != T(0)) {
+        T coeff = a[i][j] / a[rank][j];
+        for (int k = j; k < W; k++) a[i][k] -= a[rank][k] * coeff;
+      }
+    }
+    rank++;
+  }
+  return make_pair(rank, det);
+}
 
-// template<typename T>
-// struct Matrix {
-//     vector<vector<T>> A;
-//     int rows, cols;
+template <typename mint>
+vector<vector<mint>> inverse_matrix(const vector<vector<mint>>& a) {
+  int N = a.size();
+  assert(N > 0);
+  assert(N == (int)a[0].size());
 
-//     Matrix() = default;
-//     Matrix(int r, int c) : rows(r), cols(c) {
-//         A.resize(r, vector<T>(c, 0));
-//     }
-//     Matrix(int n) : rows(n), cols(n) {
-//         A.resize(n, vector<T>(n, 0));
-//     }
+  vector<vector<mint>> m(N, vector<mint>(2 * N));
+  for (int i = 0; i < N; i++) {
+    copy(begin(a[i]), end(a[i]), begin(m[i]));
+    m[i][N + i] = 1;
+  }
 
-//     vector<T>& operator[](int i) {
-//         return mat[i];
-//     }
+  auto [rank, det] = GaussElimination(m, N, true);
+  if (rank != N) return {};
 
-//     const vector<T>& operator[](int i) const {
-//         return mat[i];
-//     }
-
-//     Matrix operator+(const Matrix& other) const {
-//         Matrix result(rows, cols);
-//         for (int i = 0; i < rows; i++) {
-//             for (int j = 0; j < cols; j++) {
-//                 result[i][j] = mat[i][j] + other[i][j];
-//             }
-//         }
-//         return result;
-//     }
-
-//     Matrix operator*(const Matrix& other) const {
-//         Matrix result(rows, other.cols);
-//         for (int i = 0; i < rows; i++) {
-//             for (int j = 0; j < other.cols; j++) {
-//                 for (int k = 0; k < cols; k++) {
-//                     result[i][j] += mat[i][k] * other[k][j];
-//                 }
-//             }
-//         }
-//         return result;
-//     }
-
-//     Matrix transpose() const {
-//         Matrix result(cols, rows);
-//         for (int i = 0; i < rows; i++) {
-//             for (int j = 0; j < cols; j++) {
-//                 result[j][i] = mat[i][j];
-//             }
-//         }
-//         return result;
-//     }
-
-//     static Matrix identity(int size) {
-//         Matrix result(size, size);
-//         for (int i = 0; i < size; i++) {
-//             result[i][i] = 1;
-//         }
-//         return result;
-//     }
-
-//     Matrix operator^(long long exp) const {
-//     if (rows != cols) {
-//         throw invalid_argument("Matrix must be square to raise to a power.");
-//     }
-//     if (exp < 0) {
-//         throw invalid_argument("Exponent must be non-negative.");
-//     }
-//     Matrix result = Matrix::identity(rows);
-//     Matrix base = *this;
-//     while (exp > 0) {
-//         if (exp % 2 == 1) {
-//             result = result * base;
-//         }
-//         base = base * base;
-//         exp /= 2;
-//     }
-//     return result;
-//     }
-
-//     // 行列の表示
-//     void print() const {
-//         for (int i = 0; i < rows; i++) {
-//             for (int j = 0; j < cols; j++) {
-//                 cout << mat[i][j];
-//                 if(j < cols - 1) cout<<" ";
-//             }
-//             cout << endl;
-//         }
-//     }
-// };
+  vector<vector<mint>> b(N);
+  for (int i = 0; i < N; i++) {
+    copy(begin(m[i]) + N, end(m[i]), back_inserter(b[i]));
+  }
+  return b;
+}

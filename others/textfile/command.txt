@@ -42,7 +42,7 @@ git push origin master
 (2回目以降)
 cd <対象となるディレクトリ>
 git add . 
-git commit im "message"
+git commit -m "message"
 git push
 
 

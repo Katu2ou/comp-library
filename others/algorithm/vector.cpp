@@ -1,9 +1,6 @@
 //目次
 /*
-vectorの色々
-マージソート
-比較関数ソート
-座標圧縮
+実装集
 */
 
 vector<int> vec1{};
@@ -204,9 +201,6 @@ void multifor(int K, vector<pair<int,int>> &range){
     }
     for(int i=0;i<roopsum;i++){
         //Iを用いて処理を書く
-
-
-
         //
         if(i==roopsum-1)break;
         for(int i=K-1;i>=0;i--){
@@ -219,3 +213,4 @@ void multifor(int K, vector<pair<int,int>> &range){
     }
 }
 
+// ランレングス圧縮

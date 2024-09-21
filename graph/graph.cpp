@@ -57,12 +57,12 @@ sからtへの最短パスの個数を求める
 入力: グラフG
 出力: Gの連結成分の個数
 */
-int connection_count(vvi& G){
+int connection_count(vector<vector<int>>& G){
     int n=G.size();
     queue<int> q;
-    vi seen(n,-1);
+    vector<int> seen(n,-1);
     int ans=0;
-    rep(i,n){
+    for(int i=0;i<n;i++){
         if(seen[i]==1) {continue;}
         q.push(i);
         while(!q.empty()){
@@ -86,14 +86,14 @@ int connection_count(vvi& G){
     //入力: 無向グラフG
     //出力: 各連結成分ごとの頂点集合のvector
 
-vvi partitioned_graph(vvi& g){
+vector<vector<int>> partitioned_graph(vector<vector<int>>& g){
     int n=g.size();
-    vi memo(n,-1);
-    vvi ans;
+    vector<int> memo(n,-1);
+    vector<vector<int>> ans;
     int ind=0;
-    rep(i,n){
+    for(int i=0;i<n;i++){
         if(memo[i]!=-1)continue;
-        ans.pb(vi());
+        ans.pb(vector<int>());
         queue<int> que;
         que.push(i);
         memo[i]=ind;
