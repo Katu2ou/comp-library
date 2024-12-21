@@ -14,7 +14,7 @@ vector<T> get_basis(vector<T> &A){
 }
 
 
-// 簡約行列を得る (より都合のいい基底を手に入れる)
+// 簡約行列を得る (msbが他の要素で立っていないようなもの)
 
 template<typename T>
 vector<T> get_good_basis(vector<T> &A){

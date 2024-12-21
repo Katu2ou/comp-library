@@ -1,82 +1,141 @@
+/*
+    - n頂点の木Tが与えられている
 
-//実装例(struct) 下は、全ての頂点について、それを根とした時の最も遠い頂点までの距離を求めるコード
+    - RerootingDP<E,V,merge,e,put_edge,put_vertex> g(n) : コンストラクタ O(n)
+        E : 親のdpの計算をする際に用いる値の型
+        V : 頂点のdpの値の型
+        E put_edge (V v, int i) : 頂点vを根とする部分木のdpの値に辺iを追加した時に得られる値
+        E merge(E e1, E e2) :  2つの子について求めたput_edgeの値を結合する
+            mergeは可換モノイドによる結合を要求される
+        E e() : mergeの単位元を返す関数
+        V put_vertex(E e, int u) : 全ての子についてmergeした値から，頂点uのdp[u]を計算する
+    
+    - void add_edge(int u, int v, int idx, int xdi) : 頂点u->vの辺番号idxの辺と
+        頂点v->uの辺番号xdiの辺を追加する (ちょうどn-1回呼ぶ．ならしO(1))
 
-/* Rerooting: 全方位木 DP
-    問題ごとに以下を書き換える
-    - 型DPと単位元 (計算に必要な情報をDPの中に入れておく 初期値設定も忘れず const DP identity も合わせて設定)
-    - identityは合成mergeに対する単位元である
-    - 型DPに対する二項演算 merge (DP(~,~,...,~)としてreturn)
-    - まとめたDPを用いて新たな部分木のDPを計算する add_root (子を1つになるまでmergeしたDp dから作る)
-    計算量: O(N)
+    - V bulid(int v): 頂点vを根とした時の，dp[v]の値を返す (1回までしか呼べない O(n))
 
-    1. Rerooting reroot(n); n頂点の木を作成
-    2. reroot.add_edge(a,b); 辺を追加
-    3. reroot.build(); 
-    4. reroot.ans[i].dp; 頂点iを値とした時の答え
+    - vector<V> reroot(): 長さnの配列(i番目には，頂点iを根とした時の，dp[i]の値)を返す
+        (先にbuildをちょうど1回呼んでいる必要あり O(n))
+ 
+
+    
+    (codeforcesのG++ 20ではEとしてpiiを用いるとうまく動かなかった G++ 17 を用いること)
 */
 
-
-struct Rerooting {
-    //ここから書き換える//
-    struct DP { 
-        long long dp;
-        DP(long long dp_) : dp(dp_) {} 
+template <class E, class V, E (*merge)(E, E), E (*e)(), E (*put_edge)(V, int), V (*put_vertex)(E, int)>
+struct RerootingDP {
+    struct edge {
+        int to, idx, xdi;
     };
-    const DP identity = DP(-1);  
-    function<DP(DP, DP)> merge = [](DP dp_cum, DP d) -> DP {
-        return DP(max(dp_cum.dp, d.dp));
-    };
-    function<DP(DP)> add_root = [](DP d) -> DP {
-        return DP(d.dp + 1);
-    };
-    //ここまで書き換え//
-    struct REdge {
-        int to;
-    };
-    using Graph = vector<vector<REdge>>;
-    vector<vector<DP>> dp;  // dp[v][i]: vから出るi番目の有向辺に対応する部分木のDP
-    vector<DP> ans;         // ans[v]: 頂点vを根とする木の答え
-    Graph G;
-    Rerooting(int N) : G(N) {
-        dp.resize(N);
-        ans.assign(N, identity);
+    RerootingDP(int n_ = 0) : n(n_), inner_edge_id(0) {
+        es.resize(2*n-2);
+        start.resize(2*n-2);
+        if (n == 1) es_build();
     }
-    void add_edge(int a, int b) {
-        G[a].push_back({b});
+    void add_edge(int u, int v, int idx, int xdi){
+        start[inner_edge_id] = u;
+        es[inner_edge_id] = {v,idx,xdi};
+        inner_edge_id++;
+        start[inner_edge_id] = v;
+        es[inner_edge_id] = {u,xdi,idx};
+        inner_edge_id++;
+        if (inner_edge_id == 2*n-2){
+            es_build();
+        }
     }
-    void build() {
-        dfs(0);            
-        bfs(0, identity); 
+    vector<V> build(int root_ = 0){
+        root = root_;
+        vector<V> subdp(n); subdp[0] = put_vertex(e(),0);
+        outs.resize(n);
+        vector<int> geta(n+1,0);
+        for (int i = 0; i < n; i++) geta[i+1] = start[i+1] - start[i] - 1;
+        geta[root+1]++;
+        for (int i = 0; i < n; i++) geta[i+1] += geta[i];
+        auto dfs = [&](auto sfs, int v, int f) -> void {
+            E val = e();
+            for (int i = start[v]; i < start[v+1]; i++){
+                if (es[i].to == f){
+                    swap(es[start[v+1]-1],es[i]);
+                }
+                if (es[i].to == f) continue;
+                sfs(sfs,es[i].to,v);
+                E nval = put_edge(subdp[es[i].to],es[i].idx);
+                outs[geta[v]++] = nval;
+                val = merge(val,nval);
+            }
+            subdp[v] = put_vertex(val, v);
+        };
+        dfs(dfs,root,-1);
+        return subdp;
     }
-    DP dfs(int v, int p = -1) {  
-        DP dp_cum = identity;
-        int deg = G[v].size();
-        dp[v] = vector<DP>(deg, identity);
-        for (int i = 0; i < deg; i++) {
-            int u = G[v][i].to;
-            if (u == p) continue;
-            dp[v][i] = dfs(u, v);
-            dp_cum = merge(dp_cum, dp[v][i]);
-        }
-        return add_root(dp_cum);
+    vector<V> reroot(){
+        vector<E> reverse_edge(n);
+        reverse_edge[root] = e();
+        vector<V> answers(n);
+        auto dfs = [&](auto sfs, int v) -> void {
+            int le = outs_start(v);
+            int ri = outs_start(v+1);
+            int siz = ri - le;
+            vector<E> rui(siz+1);
+            rui[siz] = e();
+            for (int i = siz-1; i >= 0; i--){
+                rui[i] = merge(outs[le+i],rui[i+1]);
+            }
+            answers[v] = put_vertex(merge(rui[0],reverse_edge[v]),v);
+            E lui = e();
+            for (int i = 0; i < siz; i++){
+                V rdp = put_vertex(merge(merge(lui,rui[i+1]),reverse_edge[v]),v);
+                reverse_edge[es[start[v]+i].to] = put_edge(rdp,es[start[v]+i].xdi);
+                lui = merge(lui,outs[le+i]);
+                sfs(sfs,es[start[v]+i].to);
+            }
+        };
+        dfs(dfs,root);
+        return answers;
     }
-    void bfs(int v, const DP& dp_p, int p = -1) {  // bfs だが、実装が楽なので中身は dfs になっている
-        int deg = G[v].size();
-        for (int i = 0; i < deg; i++) {  // 前のbfsで計算した有向辺に対応する部分木のDPを保存
-            if (G[v][i].to == p) dp[v][i] = dp_p;
-        }
-        vector<DP> dp_l(deg + 1, identity), dp_r(deg + 1, identity);  // 累積merge
-        for (int i = 0; i < deg; i++) {
-            dp_l[i + 1] = merge(dp_l[i], dp[v][i]);
-        }
-        for (int i = deg - 1; i >= 0; i--) {
-            dp_r[i] = merge(dp_r[i + 1], dp[v][i]);
-        }
-        ans[v] = add_root(dp_l[deg]);  // 頂点 v の答え
-        for (int i = 0; i < deg; i++) {  // 一つ隣の頂点に対しても同様に計算
-            int u = G[v][i].to;
-            if (u == p) continue;
-            bfs(u, add_root(merge(dp_l[i], dp_r[i + 1])), v);
-        }
+    private:
+    int n, root, inner_edge_id;
+    vector<E> outs;
+    vector<edge> es;
+    vector<int> start;
+    int outs_start(int v){
+        int res = start[v] - v;
+        if (root < v) res++;
+        return res;
+    }
+    void es_build(){
+        vector<edge> nes(2*n-2);
+        vector<int> nstart(n+2,0);
+        for (int i = 0; i < 2*n-2; i++) nstart[start[i]+2]++;
+        for (int i = 0; i < n; i++) nstart[i+1] += nstart[i];
+        for (int i = 0; i < 2*n-2; i++) nes[nstart[start[i]+1]++] = es[i];
+        swap(es,nes);
+        swap(start,nstart);
     }
 };
+
+// mint merge(mint a, mint b){
+//     return a * b;
+// }
+// mint e(){
+//     return mint(1);
+// }
+// mint put_edge(mint v, int i){
+//     return v + 1;
+// }
+// mint put_vertex(mint e, int v){
+//     return e;
+// }
+
+// int main(){
+//     int n, m; cin >> n >> m;
+//     mint::set_mod(m);
+//     RerootingDP<mint,mint,merge,e,put_edge,put_vertex> g(n);
+//     for (int i = 0; i < n-1; i++){
+//         int u, v; cin >> u >> v;
+//         g.add_edge(u-1,v-1,i,i);
+//     }
+//     g.build();
+//     for (auto ans : g.reroot()) cout << ans.val() << endl;
+// }

@@ -7,12 +7,11 @@
         k次多項式の割り算にはO(klog(k))かかるので，そのまま剰余の定理を使うとO(nmlog(n))
         かかる->doublingを使う
 
+    - vector<int> =  MultipointEvaluation<mint>(fps,vector<int>) fps:f vector<int>:評価したい点x_1,...,x_n
+
     - 計算量 O(mlog(m)^2 + nlog(n))
 
 */
-
-
-
 
 template <typename mint>
 struct ProductTree {

@@ -1,3 +1,28 @@
+/*
+(https://rsm9.hatenablog.com/entry/2021/02/01/220408)
+
+    - atcoder::lazy_segtreeに一行加えてボトムアップ処理を行えるようにしたもの 
+        (作用の計算がある程度失敗しうるLazy Segtreeといえる)
+
+    <追加制約>
+        - S は atcoder::lazy_segtreeから参照可能なメンバ関数failを持つ
+        - mapping関数によるSの元xへの作用の結果を得る計算が
+        (xの持つ情報の不足が原因で)失敗した場合のみ，mapping関数が返すSの
+        インスタンスのfailの値はtrueとなる
+        - mapping関数による作用以外の部分(例えば，opによるSの元の二項演算)
+        で計算が失敗することはない
+        - 要素数1の区間を管理するSの元(=葉)に対しては，mapping関数は
+        計算を失敗してはならない
+    
+    - Sには，failが立つ回数ができるだけ少なくなるような工夫を施すと良い
+
+    <できることの例>
+        - 区間chmax,chmin + 
+*/
+
+
+// atcoder::lazy_
+
 namespace internal {
 
 // @param n `0 <= n`
@@ -22,7 +47,6 @@ int bsf(unsigned int n) {
 
 }  // namespace internal
 
-namespace atcoder{
 template <class S,
           S (*op)(S, S),
           S (*e)(),
@@ -188,7 +212,12 @@ struct lazy_segtree {
     void update(int k) { d[k] = op(d[2 * k], d[2 * k + 1]); }
     void all_apply(int k, F f) {
         d[k] = mapping(f, d[k]);
-        if (k < size) lz[k] = composition(f, lz[k]);
+        if (k < size) 
+        {
+            lz[k] = composition(f, lz[k]);
+            //これを追加
+            if (d[k].fail) push(k), update(k);
+        }
     }
     void push(int k) {
         all_apply(2 * k, lz[k]);

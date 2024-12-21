@@ -12,12 +12,13 @@ convex_hull_trick<T,id> conv(cor);
 <アイデア>
 
 <追加クエリ>　
-- insert(T a, T b) 
+- insert(T a, T b) : 直線 ax + b を加える
 <取得クエリ>
 - get(T x) : max(ax+b) を返す (minを得たい場合は，追加時に-a,-bを渡し，getで得られた値を-1倍する)
 */
 
-//実装例(https://kazuma8128.hatenablog.com/entry/2018/02/28/102130)
+//実装例 https://kazuma8128.hatenablog.com/entry/2018/02/28/102130
+//verified at https://atcoder.jp/contests/dp/submissions/60653609
 
 template <typename T, const T id>
 class convex_hull_trick {

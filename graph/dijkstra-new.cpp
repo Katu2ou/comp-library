@@ -14,15 +14,15 @@ vector<T> dijkstra(vector<vector<Edge<T>>> &g, int start = 0){
     priority_queue<P, vector<P>, greater<P>> pq;
     d[start] = 0;
     pq.emplace(0, start);
-    while(pq.empty()){
+    while(!pq.empty()){
         P p = pq.top();
         pq.pop();
         int cur = p.second;
         if(d[cur] < p.first) continue;
         for(auto dst : g[cur]){
-            if(d[dst] == T(-1) || d[cur] + dst.cost < d[dst]){
-                d[dst] = d[cur] + dst.cost;
-                pq.emplace(d[dst],dst);
+            if(d[dst.to] == T(-1) || d[cur] + dst.cost < d[dst.to]){
+                d[dst.to] = d[cur] + dst.cost;
+                pq.emplace(d[dst.to],dst.to);
             }
         }
     }
@@ -54,9 +54,9 @@ vector<pair<T, int>> dijkstra_restore(vector<vector<Edge<T>>> &g, int start = 0)
     T dc = d[cur].first;
     if (dc < T(p.first)) continue;
     for (auto dst : g[cur]) {
-      if (d[dst].first == T(-1) || dc + dst.cost < d[dst].first) {
-        d[dst] = P{dc + dst.cost, cur};
-        Q.push({dc + dst.cost, dst});
+      if (d[dst.to].first == T(-1) || dc + dst.cost < d[dst.to].first) {
+        d[dst.to] = P{dc + dst.cost, cur};
+        Q.push({dc + dst.cost, dst.to});
       }
     }
   }

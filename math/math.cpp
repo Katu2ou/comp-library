@@ -109,11 +109,6 @@ T extgcd(T a, T b, T &x, T &y) {
 // ax+by=d (dはgcd(a,b)の倍数と仮定する) を満たす(x,y)のうち，xが非負の最小値であるものを求める
 	// (a,bは整数)
 
-//a^m = nなる正の整数mが存在すれば返す
-ll logN(ll a, ll n){
-	ll ret = 1;
-	while(POW(a, ret)<=n){}
-}
 
 //MOD逆元の列挙
 vector<long long> inv(mx + 1); 

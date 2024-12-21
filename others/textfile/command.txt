@@ -13,6 +13,7 @@ c++ 高速なコンパイル: g++ -O3 filename.cpp -o filename //Oは大文字�
     → ./<filename>
 コマンドパレット: shift + command + P
 
+
 <ショートカット集>
 範囲選択: shift + 矢印
 コード内の検索: command + F
@@ -26,8 +27,6 @@ c++ 高速なコンパイル: g++ -O3 filename.cpp -o filename //Oは大文字�
 コンパイル: g++ <コンパイルオプション> main.cpp(コンパイルするファイルの名前) -o a.out(作成されるファイルの名前)
 実行時間測定: コンパイル->timeをつけて実行
 入力ファイルと出力ファイルを指定: ./main.out < input.txt > output.txt
-
-
 
 
 githubにファイルを上げる手順
