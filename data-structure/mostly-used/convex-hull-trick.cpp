@@ -1,24 +1,31 @@
-//Convex Hull Trick
-
-//直線集合を管理するデータ構造で、次の2種類のクエリをオンラインで処理する。
 /*
-1. 直線の追加クエリ: f(x)=ax+bを追加
-2. 最大/最小値の取得クエリ: ある与えられたxに対して、最大/最小のf(x)を求める
+  <Convex-hull-trick>
+    - 直線集合を管理するデータ構造で、次の2種類のクエリをオンラインで処理する。
+        1. 直線の追加クエリ: f(x)=ax+bを追加
+        2. 最大/最小値の取得クエリ: ある与えられたxに対して、最大/最小のf(x)を求める
 
-convex_hull_trick<T,id> conv(cor); 
-    - idは型Tでの-infのこと
-    - corは，取得クエリでx(y=ax+bのx)の取りうる値を全列挙してソートしたもの
+    [実装/関数]
+        - convex_hull_trick<T,id> conv(vec); (idは型Tにおけるconst値 -inf) 
+        - insert(T a, T b) : 直線 ax + b を加える
+        - get(T x) : max(ax+b) を返す (minを得たい場合は，追加時に-a,-bを渡し，getで得られた値を-1倍する)
+    
+    [計算時間]
+        - insertとgetともにO(log N) (Nは追加した直線の本数)
+    
+    [備考]
+        - 中国ではLi Chao Segment Tree と呼ばれているらしい
+    
+    [参照]
+        - https://kazuma8128.hatenablog.com/entry/2018/02/28/102130
 
-<アイデア>
-
-<追加クエリ>　
-- insert(T a, T b) : 直線 ax + b を加える
-<取得クエリ>
-- get(T x) : max(ax+b) を返す (minを得たい場合は，追加時に-a,-bを渡し，getで得られた値を-1倍する)
+    [verified at]
+        - https://atcoder.jp/contests/dp/submissions/60653609
+    
+    [使用例]
+        
+        
 */
 
-//実装例 https://kazuma8128.hatenablog.com/entry/2018/02/28/102130
-//verified at https://atcoder.jp/contests/dp/submissions/60653609
 
 template <typename T, const T id>
 class convex_hull_trick {

@@ -10,9 +10,7 @@
 
 struct subsets {
   using u64 = std::uint64_t;
-
   u64 s;
-
   subsets(u64 s_) : s(s_) {}
 
   struct itr {

@@ -2,7 +2,7 @@
 
 template <class T>
 struct Matrix {
-  vector<vector<T> > A;
+  vector<vector<T>> A;
 
   Matrix() = default;
   Matrix(int n, int m) : A(n, vector<T>(m, T())) {}
@@ -137,63 +137,66 @@ struct Matrix {
     return ret;
   }
 };
-
-template <typename T>
-std::pair<int, T> GaussElimination(vector<vector<T>> &a, int pivot_end = -1,
-                                   bool diagonalize = false) {
-  if (a.empty()) return {0, 1};
-  int H = a.size(), W = a[0].size(), rank = 0;
-  if (pivot_end == -1) pivot_end = W;
-  T det = 1;
-  for (int j = 0; j < pivot_end; j++) {
-    int idx = -1;
-    for (int i = rank; i < H; i++) {
-      if (a[i][j] != T(0)) {
-        idx = i;
-        break;
-      }
+//ガウスの消去法
+/*
+    - 行列aに対して，aを階数標準形に直し，aのrankとdetを返す
+*/
+    template <typename T>
+    std::pair<int, T> GaussElimination(vector<vector<T>> &a, int pivot_end = -1,
+                                    bool diagonalize = false) {
+    if (a.empty()) return {0, 1};
+    int H = a.size(), W = a[0].size(), rank = 0;
+    if (pivot_end == -1) pivot_end = W;
+    T det = 1;
+    for (int j = 0; j < pivot_end; j++) {
+        int idx = -1;
+        for (int i = rank; i < H; i++) {
+        if (a[i][j] != T(0)) {
+            idx = i;
+            break;
+        }
+        }
+        if (idx == -1) {
+        det = 0;
+        continue;
+        }
+        if (rank != idx) det = -det, swap(a[rank], a[idx]);
+        det *= a[rank][j];
+        if (diagonalize && a[rank][j] != T(1)) {
+        T coeff = T(1) / a[rank][j];
+        for (int k = j; k < W; k++) a[rank][k] *= coeff;
+        }
+        int is = diagonalize ? 0 : rank + 1;
+        for (int i = is; i < H; i++) {
+        if (i == rank) continue;
+        if (a[i][j] != T(0)) {
+            T coeff = a[i][j] / a[rank][j];
+            for (int k = j; k < W; k++) a[i][k] -= a[rank][k] * coeff;
+        }
+        }
+        rank++;
     }
-    if (idx == -1) {
-      det = 0;
-      continue;
+    return make_pair(rank, det);
     }
-    if (rank != idx) det = -det, swap(a[rank], a[idx]);
-    det *= a[rank][j];
-    if (diagonalize && a[rank][j] != T(1)) {
-      T coeff = T(1) / a[rank][j];
-      for (int k = j; k < W; k++) a[rank][k] *= coeff;
+
+    template <typename mint>
+    vector<vector<mint>> inverse_matrix(const vector<vector<mint>>& a) {
+    int N = a.size();
+    assert(N > 0);
+    assert(N == (int)a[0].size());
+
+    vector<vector<mint>> m(N, vector<mint>(2 * N));
+    for (int i = 0; i < N; i++) {
+        copy(begin(a[i]), end(a[i]), begin(m[i]));
+        m[i][N + i] = 1;
     }
-    int is = diagonalize ? 0 : rank + 1;
-    for (int i = is; i < H; i++) {
-      if (i == rank) continue;
-      if (a[i][j] != T(0)) {
-        T coeff = a[i][j] / a[rank][j];
-        for (int k = j; k < W; k++) a[i][k] -= a[rank][k] * coeff;
-      }
+
+    auto [rank, det] = GaussElimination(m, N, true);
+    if (rank != N) return {};
+
+    vector<vector<mint>> b(N);
+    for (int i = 0; i < N; i++) {
+        copy(begin(m[i]) + N, end(m[i]), back_inserter(b[i]));
     }
-    rank++;
-  }
-  return make_pair(rank, det);
-}
-
-template <typename mint>
-vector<vector<mint>> inverse_matrix(const vector<vector<mint>>& a) {
-  int N = a.size();
-  assert(N > 0);
-  assert(N == (int)a[0].size());
-
-  vector<vector<mint>> m(N, vector<mint>(2 * N));
-  for (int i = 0; i < N; i++) {
-    copy(begin(a[i]), end(a[i]), begin(m[i]));
-    m[i][N + i] = 1;
-  }
-
-  auto [rank, det] = GaussElimination(m, N, true);
-  if (rank != N) return {};
-
-  vector<vector<mint>> b(N);
-  for (int i = 0; i < N; i++) {
-    copy(begin(m[i]) + N, end(m[i]), back_inserter(b[i]));
-  }
-  return b;
-}
+    return b;
+    }

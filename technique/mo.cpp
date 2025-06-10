@@ -89,7 +89,6 @@ int main() {
     ans[q] = sum;
   };
 
-
   mo.build(add, erase, out); // buildで解く
   for(auto &p: ans) cout << p << "\n";
 }

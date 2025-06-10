@@ -1,4 +1,25 @@
-//Next Combination
+/*
+  <next combination>
+    - n要素からなる配列のうちk要素の選び方を全て列挙する
+
+    [実装/関数]
+        - do{}while(next_combination(v.begin(),v.end(),k)); の形で使う
+        - 
+    
+    [計算時間]
+        - 計算量はO(n * nCk)? で，nが大きいと遅い -> 再帰で全探索する(後述)
+    
+    [備考]
+        - 
+    
+    [参照]
+        - 
+
+    [verified at]
+        - 
+        
+*/
+
 template <typename T> bool next_combination(const T first, const T last, int k) {
     const T subset = first + k;
     // empty container | k = 0 | k == n 
@@ -24,54 +45,16 @@ template <typename T> bool next_combination(const T first, const T last, int k) 
     return false;
 }
 
-vector<int> v{1, 2, 3, 4, 5, 6, 7};
-do {
-
-} while(next_combination(v.begin(), v.end(), k));
-//(vの中のk個の集合を、各回においてv[0],v[1],...v[k-1]が
-//異なるk個となるようにしている)
-
-
-
-/* next combination 
-ll next_combination(ll sub) {
-	int x = sub & -sub, y = sub + x;
-	return (((sub & ~y) / x) >> 1) | y;
-}
-int main() {
-	ll n = 5;  // {0, 1, 2, 3, 4} の部分集合を考える
-	ll k = 3;
-
-	ll bit = (1 << n) - 1;  // bit = {0, 1, 2}
-	for (; bit < ((ll)1 << n); bit = next_combination(bit)) {
-		 ここに処理を書く */
-
-
-//Next Permutation
- int array[]={1,2,3,4};
-    do{
-        for(int i=0; i<4; i++){
-            cout<<array[i];
-            if(i!=3)cout<<" ";
-        }
-        cout<<endl;
-    }while(next_permutation(array,array+4));
-
-//例
-int a[3] = {1, 2, 3};
-  
-do {
-  for(int i= 0; i < 3; i++){
-    cout << a[i] << ' ';
-  }
-  cout << endl;
-} while(next_permutation(a, a + 3));
-
-//vectorの例
- vector<int> vec{};
-    rep(i,n){
-        vec.pb(i);
-    }
-    do{
-
-    }while(next_permutation(all(vec)));
+// 再帰
+// auto dfs = [&](auto &&dfs, vi &vec, int i, int j){ 
+//         if(j==k){
+//             //処理
+//         }
+//         for(int t=i+1;t<n;t++){
+//                 //seen[t][j+1]=1;
+//                 vec.PB(t);
+//                 dfs(dfs,vec,t,j+1);
+//                 vec.pop_back();       
+//         }
+//         return;
+//     };

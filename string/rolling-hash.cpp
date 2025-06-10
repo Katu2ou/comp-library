@@ -250,7 +250,7 @@ struct RollingHash {
   Str data;
   vector<Hash> hs, pw;
   int s;
-  static Hash basis;
+  inline static Hash basis = Hash::get_basis(); //inlineが必要！！
 
   RollingHash(const Str &S = Str()) { build(S); }
 
@@ -322,7 +322,7 @@ using roriha = RollingHash<string, 2>;
 
 // RollingHash<string> rh(S): コンストラクタ。Sを対象としたRollingHashを構築する。
 // build(S): Sを対象としたRollingHashを構築する。
-// get(l, r): 区間[l, r)のハッシュを返す。
+// get(l, r): 区間[l, r)のハッシュを返す。 (0-indexed)
 // get_hash(T): Tのハッシュ値を返す。
 // find(T, lower = 0): Sのlower文字目以降で初めてTが出てくる位置を返す。(存在しない場合は-1を返す。)
 // LCP(a, b, al, bl): aのal文字目から始まるsuffixとbのb文字目から始まるsuffixのLCPを返す。

@@ -1,21 +1,39 @@
 /*
-   < ゼータ変換・メビウス変換 >
-
+  <ゼータ変換 メビウス変換>
     - ゼータ変換とメビウス変換はposet上の関数に対して定義される．畳み込みを定めるには束である
         必要がある(つまり，posetであって任意の二元a,bに対しa以上かつb以上の元の最小元と
         a以下かつb以下の元の最大限が存在してほしい)
         - 参照: https://qiita.com/convexineq/items/afc84dfb9ee4ec4a67d5m
 
-*/
+    -
 
-/*
-    1. 冪集合に対するゼータ変換
-        - 長さ2^nの配列Aと長さbのビット列に対して，集合bの下位集合i全体のA[i]の和と，上位集合j全体のA[j]の和を計算する
-*/ 
+    [実装/関数]
+        - void zt_des(vector<T> A, int n) : 
+            長さ2^n以上の配列Aに対して，A[i]を(iの部分集合jに対するA[j]の和)に変更する
+
+        - void zt_asc(vector<T> A, int n) : 
+            長さ2^n以上の配列Aに対して，A[i]を(iを含む集合jに対するA[j]の和)に変更する
+
+        - void mb_asc(vector<A>, int n) : 
+            
+    
+    [計算時間]
+        - ゼータ変換/メビウス変換 : O(2^n*n)
+    
+    [備考]
+        -
+    
+    [参照]
+        - 
+
+    [verified at]
+        - 
+        
+*/
 
 // bの下位集合全体の和
 template <typename T>
-void zeta_tr(vector<T> &A, int n) {
+void zt_des(vector<T> &A, int n) {
     int An = A.size();
     for(int i=0;i<n;i++){ //各次元に対しての更新
         for(int j=0;j<An;j++){ //各要素を見る
@@ -24,11 +42,10 @@ void zeta_tr(vector<T> &A, int n) {
     }    
     return;
 }
-cout << A[b] << "\n";
 
 // bの上位集合全体の和
 template <typename T>
-void zeta_tr(vector<T> &A, int n) {
+void zt_asc(vector<T> &A, int n) {
     int An = A.size();
     for(int i=0;i<n;i++){
         for(int j=0;j<An;j++){
@@ -37,7 +54,17 @@ void zeta_tr(vector<T> &A, int n) {
     }    
     return;
 }
-cout << A[b] << "\n";
+
+template <typename T>
+void mb_asc(vector<T> &A, int n) {
+    int An = A.size();
+    for(int i=0;i<n;i++){
+        for(int j=0;j<An;j++){
+            if(j & (1LL<<i)) A[j^(1LL<<i)] += A[j];
+        }
+    }    
+    return;
+}
 
 
 /*

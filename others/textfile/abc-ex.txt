@@ -33,7 +33,7 @@
 
     - 302 : (a_i,b_i)から一方選ぶ時の種類数の最大化 グラフへの帰着 UFで高速化 / rollback-UF
 
-    - 301 : lowlink dfs-order
+    - 301 : lowlink dfs-order 
 
     - 300 : 桁DPの母関数を用いた解釈 / bostan-mori
 
@@ -51,7 +51,7 @@
 
     - 293 : 木DP
 
-    - 292 : segment_tree上二分探索 / 平方分割
+    - 292 : segment_tree 上二分探索 / 平方分割
 
     - 291 : 重心分解
 

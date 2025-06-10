@@ -56,3 +56,10 @@ Random: 0.03s
 random_uniform 9s
 
 */
+
+
+/*
+    int64_t rnd = chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
+    mt19937_64 mt(rnd);
+    もあり(uniform_int_distributionまでは使い回しをする)
+*/

@@ -48,9 +48,11 @@
 - hypot(=sqrt(x^x+y^y)) : ABC375B https://atcoder.jp/contests/abc375/submissions/58733894
 - ラムダ式比較関数 + priority_queue : AGC023F https://atcoder.jp/contests/agc023/submissions/59018859
 - struct + priority_queue : AGC023F https://atcoder.jp/contests/agc023/submissions/59019016
-- ラムダ式比較関数 + sort : 
+- ラムダ式比較関数 + sort : https://atcoder.jp/contests/agc064/submissions/61077163
 - tupleの基本操作 : ABC382F https://atcoder.jp/contests/abc382/submissions/60335211
 - 謎のRE(munmap_chunk(): invalid pointer) : ABC382D  https://atcoder.jp/contests/abc382/submissions/60347996
+    - 結局これは添字ミスだったはず
+- 
 
 <理解していない 実装がない>
 - 双対セグ木

@@ -73,10 +73,11 @@ ll Primitive_Root(ll p){
 //(注)998244353の原始根は3、1000000007の原始根は5が最小
 
 //エラトステネスの篩(O(NloglogN)のやつ 添字1--nに対してisprime[i]は素数なら1を返し、
-//合成数なら最小の素因数を返すvector)
+//合成数なら最小の素因数を返すvector) 0 には0を返す
 //これを使った後ならN以下の素因数分解を最悪計算量O(logN)でできる。
 vector<int> Eratosthenes(int N) {
     vector<int> isprime(N+1, 1);
+    isprime[0] = 0;
     isprime[1] = 0;
     for (ll p = 2; p <= N; ++p) {
         if (isprime[p] != 1) continue;

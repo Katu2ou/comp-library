@@ -1,11 +1,38 @@
-//
 /*
-    - and,or,xor の畳み込み(NlogN)
-        - c_k = \sum_{i (and, or, xor) j = k} a_i * b_j の形の畳み込み
-            (* は普通の積を表す)
-        - 出典: https://sapphire15.hatenablog.com/entry/2021/09/13/114900
-*/
+  <and,or,xorの畳み込み>
+    - 数列 a, b に対して，数列 c であって
+        c_k = \sum_{i (and,or,xor) j = k} a_i * b_j 
+    (*は普通の積)
+    を満たすものを求める
+    - 高速アダマール変換(FWT)とも呼んだりする
 
+    [実装/関数]
+        - class Bitwise_convolution<配列の元の型>
+        (メンバ関数)
+            - and_convolution(const Vec&a, const Vec&b)
+            - or_convolution(const Vec&a, const Vec&b)
+            - xor_convolution(const Vec&a, const Vec&b)
+        は，vector<T>の配列を返す
+        
+        (入力)
+            - 長さ2冪の配列 a, b
+        (出力)
+            - 畳み込み結果の配列 c
+    
+    [計算時間]
+        - O(NlogN)
+    
+    [参照]
+        - https://sapphire15.hatenablog.com/entry/2021/09/13/114900
+
+    [verified at]
+        - 
+        
+    [使用例]
+        vector<int> a, b;
+        auto && c = Bitwise_convolution::xor_convolution(a,b); (結果の配列cが得られる)
+
+*/
 
 template<class T>
 class Bitwise_convolution {
