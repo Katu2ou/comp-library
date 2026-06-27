@@ -1,7 +1,8 @@
 //離散対数問題(baby step-giant step 法)
 
-//入力 ll x,y,p
-//出力 x^a = y (mod p)を満たす最小の非負整数aを返す
+// 入力 ll x,y,p (pは素数でなくても良い)
+// 出力 x^a = y (mod p)を満たす最小の非負整数aを返す
+// 解が存在しない場合は-1を返すはず
 
 ll modlog(ll x, ll y, ll p) {
     ll H = sqrt(p) + 1;

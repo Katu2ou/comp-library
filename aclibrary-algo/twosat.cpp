@@ -1,3 +1,36 @@
+/*
+  <2-SAT>
+
+    [実装/関数]
+        - two_sat ts(int n)
+            : n変数の2-SATを作る
+        - void ts.add_clause(int i, bool f, int j, bool g)
+            : (x_i=f) or (x_j = g) というクローズを加える
+        - bool ts.satisfiable()
+            : 条件を充足する割り当てが存在すればtrue，そうでなければfalse
+                (複数回呼ぶことも可能)
+        - vector<bool> ts.answer()
+            : 最後に呼んだsatisfiableの，クローズを満たす割り当てを返す．
+                satisfiableがfalseなら，中身未定義の長さnのvectorを返す
+         
+                
+    [計算時間]
+        - satisfiable O(n+m)
+
+    [備考]
+        - 
+    
+    [参照]
+        - 
+
+    [verified at]
+        - 
+    
+    [使用例] 
+        
+*/
+
+
 namespace internal {
 
 template <class E> struct csr {
@@ -92,7 +125,6 @@ struct scc_graph {
 
 }  // namespace internal
 
-namespace atcoder {
 // Reference:
 // B. Aspvall, M. Plass, and R. Tarjan,
 // A Linear-Time Algorithm for Testing the Truth of Certain Quantified Boolean
@@ -123,5 +155,3 @@ struct two_sat {
     std::vector<bool> _answer;
     internal::scc_graph scc;
 };
-
-}  // namespace atcoder

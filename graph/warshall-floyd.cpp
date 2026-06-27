@@ -1,4 +1,5 @@
 // 隣接行列dist(辺があるところは辺のcost, ないところは-1)を受け取り，全頂点最短路の長さとする
+
 void warshall_floyd(vector<vector<ll>> &dist) {
     int V = dist.size();
     for (int k = 0; k < V; k++) {

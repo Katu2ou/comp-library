@@ -1,3 +1,64 @@
+/*
+  <lazy segtree>
+    - モノイド(S,・)と，SからSへの写像の集合Fであって，
+        - Fは恒等写像idを含む
+        - Fは写像の合成について閉じている
+        - f(x・y) = f(x) ・ f(y)
+    を満たすものに使える．
+
+    [実装/関数]
+        - lazy_segtree<S, op, e, F, mapping, composition, id> seg(int n)
+        - lazy_segtree<S, op, e, F, mapping, composition, id> seg(vector<T> v)
+            - モノイドの型 S
+            - S,S->S を計算する関数 S op(S a, S b)
+            - eを返す関数 S e()
+            - 写像の型 F
+            - f(x)を返す関数 S mapping(F f, S x)
+            - f ⚪︎ g を返す関数 F composition(F f, F g)
+            - idを返す関数 F id()
+
+        - void seg.set(int p, int x) : a[p]=xをする (O(logN))
+        - S seg.get(int p) : a[p]を返す (O(logN))
+        - S seg.prod(int l, int r) : op(a[l],...,a[r-1])を返す l=rのときはe()を返す
+        - S seg.all_prod() : op(a[0],...,a[n-1])を計算する O(1)
+        - void seg.apply(int p, F f) : a[p] = f(a[p])
+        - void seg.apply(int l, int r, F f) : i=l,...,r-1について a[i] = f(a[i])
+
+        - int seg.max_right<g>(int l) : 関数bool g(S x) を定義して渡す
+        - int seg.max_right<G>(int l, G g) : Sを引数に取りboolを返す関数オブジェクトを渡す
+            - 次の条件を両方満たすrをいずれか一つ返す
+                - r = l もしくはg(op(a[l] , ..., a[r-1])) = true
+                - r = n もしくはg(op(a[l], ..., a[r])) = false
+            - gが単調とすると，g(op(a[l], ..., a[r-1])) = trueとなる最大のrを返すといえる．
+            (true,true,....,true,false,false,...)
+                - g(e()) = true が制約
+        
+        - int seg.min_left<g>(int r)
+        - int seg.min_left<G>(int r, G g)
+            - 次の条件を両方満たすlをいずれか一つ返す
+                - l = r もしくはg(op(a[l], a[l + 1], ..., a[r - 1])) = true
+                - l = 0 もしくは g(op(a[l - 1], a[l], ..., a[r - 1])) = false
+            - gが単調だとすれば、g(op(a[l], a[l + 1], ..., a[r - 1])) = true となる
+            最小のlを返すといえる．
+            (false,false,...,false,true,true,...)
+                - g(e()) = true が制約
+                
+    [計算時間]
+        - 
+    
+    [備考]
+        - 
+    
+    [参照]
+        - https://atcoder.github.io/ac-library/production/document_ja/fenwicktree.html
+
+    [verified at]
+        - 
+    
+    [使用例] 
+        
+*/
+
 namespace internal {
 
 // @param n `0 <= n`
@@ -6,7 +67,7 @@ int ceil_pow2(int n) {
     int x = 0;
     while ((1U << x) < (unsigned int)(n)) x++;
     return x;
-}
+}//a
 
 // @param n `1 <= n`
 // @return minimum non-negative `x` s.t. `(n & (1 << x)) != 0`
@@ -22,7 +83,6 @@ int bsf(unsigned int n) {
 
 }  // namespace internal
 
-namespace atcoder{
 template <class S,
           S (*op)(S, S),
           S (*e)(),
@@ -196,4 +256,4 @@ struct lazy_segtree {
         lz[k] = id();
     }
 };
-}
+

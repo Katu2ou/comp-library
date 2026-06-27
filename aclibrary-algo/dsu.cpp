@@ -1,3 +1,31 @@
+/*
+  <disjoint union set>
+    - 
+    [実装/関数]
+        - dsu d(int n) : n頂点0辺の無向グラフを作る
+        - int d.merge(int a, int b) : 辺(a,b)を足し，a,bが連結ならその代表元，非連結なら新たな代表元を返す
+        - bool d.same(int a, int b)
+        - int d.leader(int a) : aの代表元を返す
+        - int d.size(int a) : aの属する連結成分のサイズを返す
+        - vector<vector<int>> d.groups() : 「一つの連結成分の頂点番号のリスト」のリストを返す
+
+    [計算時間]
+        - 
+    
+    [備考]
+        - 
+    
+    [参照]
+        - https://atcoder.github.io/ac-library/production/document_ja/index.html
+
+    [verified at]
+        - 
+    
+    [使用例] 
+        
+*/
+
+
 // Implement (union by size) + (path compression)
 // Reference:
 // Zvi Galil and Giuseppe F. Italiano,

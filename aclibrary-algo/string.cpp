@@ -1,4 +1,43 @@
-namespace atcoder {
+/*
+  <string>
+
+    [実装/関数]
+        - vector<int> suffix_array(string s)
+        - vector<int> suffix_array<T>(vector<T> s)
+        - vector<int> suffix_array(vector<int> s, int upper)
+            : 長さnの文字列sのsuffix arrayとして，長さnのvectorを返す．
+            (Tはint,uint,ll,ull)
+            : sの全ての要素xについて0<=x<=upperが必要
+
+        - vector<int> lcp_array(string s, vector<int> sa)
+        - vector<int> lcp_array<T>(vector<T> s, vector<int> sa)
+            : 長さnの文字列sのLCP Arrayとして，長さn-1の配列を返す．
+            i番目の要素は，s[sa[i],...,n), s[sa[i+1],...,n)のLCPの長さ
+            : saはsのsuffix array
+        
+        - vector<int> z_algorithm(string s)
+        - vector<int> z_algorithm<T>(vector<T> s)
+            : 入力の長さをnとして長さnの配列を返す．i番目の要素は
+                s[0,...,n) と s[i,...,n)のLCPの長さ
+         
+                
+    [計算時間]
+        - suffix_array 順にO(n) / O(nlogn) time O(n) space / O(n+upper)
+        - lcp_array : O(n)
+        - z_algorithm : O(n)
+
+    [備考]
+        - 
+    
+    [参照]
+        - 
+
+    [verified at]
+        - 
+    
+    [使用例] 
+        
+*/
 
 namespace internal {
 
@@ -260,5 +299,3 @@ std::vector<int> z_algorithm(const std::string& s) {
     }
     return z_algorithm(s2);
 }
-
-}  // namespace atcoder

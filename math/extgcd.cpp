@@ -1,24 +1,46 @@
 /*
-拡張ユークリッドの互除法
-	入力: ll a, b, x, y (初期値x,yはll x,y=0とする。a>=0,b>=0. a<0 or b<0でも結果は帰ってくるが，Gが所望の-1倍の可能性がある)
-	出力: ax + by = gcd(a,b) をみたす(x,y)にx,yを変化させる、d=gcd(a,b)を返す
-	//(注) 返り値Gの値の符号が欲しいものと逆ならば，x,yを-1倍しないと欲しい結果が返ってこない
+  <extgcd>
+    - ax + by = gcd(a,b) なる(x,y)を計算する
 
-    ここで，ax+by=d (dはgcd(a,b)の倍数と仮定する) を満たす(x,y)のうち，xが非負の最小値であるものを求める
-	 (a,bは整数)
+    [実装/関数]
+        - T extgcd(T a, T b, T &x, T &y)
+            : x, y は型Tの変数．x = 0, y = 0 として渡す．
+            : ax + by = gcd(a,b) なる (x,y) にx, yを変化させる．また，関数の返り値としてgcd(a,b) を返す．
+                (a,bの符号によらずgcdは非負の値として得られる)
+            : 得られるx,yは正であるとは限らない．
+            : |x| <= |b/gcd(a,b)| を満たすはず
 
-     - つまり，Gが負の値として得られたら，-1倍する際にxは解となる値のうち0以下の最大値をとる．
-    */
+    [計算時間]
+        - O(log max(|a|,|b|))
+    
+    [備考]
+        - 
+    
+    [参照]
+        - 
 
-template< typename T >
+    [verified at]
+        - 
+    
+    [使用例] 
+        
+*/
+
+template<typename T>
 T extgcd(T a, T b, T &x, T &y) {
-  T d = a;
-  if(b != 0) {
-    d = extgcd(b, a % b, y, x);
+    if (b == 0) {
+        if (a >= 0) {
+            x = 1;
+            y = 0;
+            return a;
+        } else {
+            x = -1;
+            y = 0;
+            return -a;
+        }
+    }
+
+    T d = extgcd(b, a % b, y, x);
     y -= (a / b) * x;
-  } else {
-    x = 1;
-    y = 0;
-  }
-  return d;
+    return d;
 }

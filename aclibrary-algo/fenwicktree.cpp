@@ -1,3 +1,27 @@
+/*
+  <fenwick tree>
+    - 
+    [実装/関数]
+        - fenwick_tree<T> fw(int n) : 長さnの配列(初期値0)を作る
+        - void fw.add(int p, T x) : a[p] += x をする
+        - T fw.sum(int l int r) : a[l]+ ... + a[r-1] を返す Tが整数型なら，オーバーフローした時に
+            mod 2^bit で等しい値を返す
+    [計算時間]
+        - 
+    
+    [備考]
+        - 
+    
+    [参照]
+        - https://atcoder.github.io/ac-library/production/document_ja/fenwicktree.html
+
+    [verified at]
+        - 
+    
+    [使用例] 
+        
+*/
+
 namespace internal {
 
 #ifndef _MSC_VER
@@ -85,7 +109,6 @@ template <class T> using to_unsigned_t = typename to_unsigned<T>::type;
 
 }  // namespace internal
 
-namespace atcoder{
 // Reference: https://en.wikipedia.org/wiki/Fenwick_tree
 template <class T> struct fenwick_tree {
     using U = internal::to_unsigned_t<T>;
@@ -121,4 +144,3 @@ template <class T> struct fenwick_tree {
         return s;
     }
 };
-}

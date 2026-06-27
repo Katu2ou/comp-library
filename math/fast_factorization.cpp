@@ -17,6 +17,20 @@ long long random_uniform(long long n) {
     return dist(mt);
 }
 
+//　構造体として持っておくと楽
+
+struct RNG {
+    std::mt19937_64 eng;            // 64bit Mersenne Twister
+
+    RNG() : eng(std::random_device{}()) {}   // ここでだけ OS 乱数を消費
+
+    /// [0, n] の一様乱数を返す
+    long long random_uniform(long long n) {
+        std::uniform_int_distribution<long long> dist(0, n);
+        return dist(eng);
+    }
+};
+
 /*
 ll rand_int(ll l, ll r) { //[l, r]
 	//#ifdef LOCAL
@@ -27,7 +41,6 @@ ll rand_int(ll l, ll r) { //[l, r]
 	return uniform_int_distribution<ll>(l, r)(gen);
 */
 
-//Modpow(a,2,mod)と書かずにModpow(a,(ll)2,mod)と書く!
 ll Modpow(__int128_t a, ll n, ll mo) {
 	__int128_t r=1;
 	a%=mo;

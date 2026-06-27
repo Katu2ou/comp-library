@@ -1,5 +1,5 @@
 // 線形方程式 Ax = B を解く
-// 解が存在する場合は, 解が v + C_1 w_1 + ... + C_k w_k と表せるとして
+// 解が存在する場合は, 解が v + C_1 w_1 + ... + C_k w_k (C_1,...,C_kは任意定数)と表せるとして
 // (v, w_1, ..., w_k) を返す
 // 解が存在しない場合は空のベクトルを返す
 
@@ -13,6 +13,7 @@ std::pair<int, T> GaussElimination(vector<vector<T>> &a, int pivot_end = -1,
                                    bool diagonalize = false) {
   if (a.empty()) return {0, 1};
   int H = a.size(), W = a[0].size(), rank = 0;
+  assert((int)b.size() == H);
   if (pivot_end == -1) pivot_end = W;
   T det = 1;
   for (int j = 0; j < pivot_end; j++) {

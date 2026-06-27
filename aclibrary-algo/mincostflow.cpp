@@ -1,4 +1,69 @@
-namespace atcoder {
+/*
+  <MinCostFlow>
+    -
+
+    [実装/関数]
+        - mcf_graph<Cap,Cost> graph(int n) : n頂点0辺のグラフを作る(Capは容量の型,Costはコストの型)
+            - Cap,Cost はint or ll
+        - int graph.add_edge(int from, int to, Cap cap, Cost cost)
+            : fromからtoへ最大容量cap,コストcost,流量0の辺を追加し，何番目に追加された辺か返す．
+            (0 <= cap,cost)
+        - pair<Cap,Cost> graph.flow(int s, int t)
+            : sからtへ流せるだけ流し，流せた量とその時のコストを返す(コストを最小化)
+        - pair<Cap,Cost> graph.flow(int s, int t, Cap flow_limit)
+            : sからtへ流量flow_limitに達するまで流せるだけ流し，流せた量を返す(コストを最小化)
+            (s\neq t)
+
+        - vector<pair<Cap,Cost>> graph.slope(int s, int t)
+        - vector<pair<Cap,Cost>> graph.slope(int s, int t, Cap flow_limit)
+            : 返り値に流量とコストの関係の折れ線が入る．全てのxについて，流量xの時の最小コストを
+            g(x)とすると，(x,g(x))は返り値を折れ線としてみたものに含まれる，
+                - 返り値の最初の要素は(0,0)
+                - 返り値の.first,.secondは共に狭義単調増加
+                - 3点が同一直線上にあることはない
+                - 返り値の最後の要素は(x,g(x)) (xは最大流 or limit)
+        - struct edge<Cap,Cost> {
+                int from, to;
+                Cap cap, flow;
+                Cost cost;
+            };
+            - mcf_graph<Cap,Cost>::edge graph.get_edge(int i)
+            - vector<mcf_graph<Cap,Cost>::edge> graph.edges()
+                : 今の内部の辺の状態を返す(辺を追加した順)
+        
+         - struct residual_edge {
+                int to;
+                Cap cap;
+                Cost cost;
+            };
+        - vector<vector<residual_edge>> graph.residual_graph()
+            : 現在の残余グラフを返す．
+              返り値の[v]には，残余グラフにおいてvから出る辺が入る．
+              各辺eについて，
+                - e.to   : 行き先
+                - e.cap  : 残余容量
+                - e.cost : 残余辺のコスト
+              を表す．
+              残余容量が正の辺のみを返す．
+
+
+    [計算時間]
+        - add_edge : ならしO(1)
+        - flow/slope : Fを流量としてO(F(n+m)log(n+m))
+
+    [備考]
+
+
+    [参照]
+        -
+
+    [verified at]
+        -
+
+    [使用例]
+
+
+*/
 
 template <class Cap, class Cost> struct mcf_graph {
   public:
@@ -139,6 +204,26 @@ template <class Cap, class Cost> struct mcf_graph {
         return result;
     }
 
+    struct residual_edge {
+        int to;
+        Cap cap;     // 残余容量
+        Cost cost;   // 残余辺のコスト
+    };
+
+    std::vector<std::vector<residual_edge>> residual_graph() const {
+        std::vector<std::vector<residual_edge>> res(_n);
+
+        for (int v = 0; v < _n; v++) {
+            for (const auto& e : g[v]) {
+                if (e.cap > 0) {
+                    res[v].push_back(residual_edge{e.to, e.cap, e.cost});
+                }
+            }
+        }
+
+        return res;
+    }
+
   private:
     int _n;
 
@@ -151,5 +236,3 @@ template <class Cap, class Cost> struct mcf_graph {
     std::vector<std::pair<int, int>> pos;
     std::vector<std::vector<_edge>> g;
 };
-
-}  // namespace atcoder

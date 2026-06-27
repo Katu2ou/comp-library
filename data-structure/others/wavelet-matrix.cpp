@@ -1,53 +1,124 @@
-//wavelet行列
 /*
-    - 文字列に対する定数時間のrank(文字列の先頭から位置kまでに文字xがいくつあるか)
-    - 文字列の先頭から見て、n個目の文字xの次の位置はどこか
-を定数時間で処理することができる。
+<Wavelet Matrix>
+    非負整数列 a に対して，値のビットごとに分解して管理するデータ構造．
+    区間内の k 番目に小さい値，ある値未満の個数，前後の値などを
+    O(log A) で求められる．
+    ここで A は列に含まれる最大値程度であり，実装上は最大値のビット長 lg を用いる．
 
-内部で完備辞書が使われている
+    内部では bit_vector を用いる．
 
-//完備辞書
-    ビットベクトルBに対して以下の操作を提供する
-    - access(B,i) B[i]を返す
-    - rank_b(B,i) B[i,i]のbの数を返す
-    - select_b(B,i) Bの先頭からi番目のbの位置を返す
-//
+<bit_vector>
+    ビット列 B に対して以下の操作を提供する．
 
-//Wavelet行列
-    整数列Tに対して以下の操作を提供する
-    - access(T,i) T[i]を復元する(O(logn))
-    - rank_c(T,i) T[1,i]中のcの出現回数を返す(O(logn))
-    - select_c(T,i) T中のcのi番目の出現位置を返す(O(logn))
-    - quantile(T,s,e,r) T[s,e]の中のr番目に小さい値を返す(O(logn))
-    - topk(T,s,e,k) T[s,e]中で出現回数が多い順にその頻度とともにk個返す
-    - sum(T,s,e) T[s,e]の合計を返す
-    - rangefreq(T,s,e,x,y) T[s,e]中に出現するx<=c<yを満たす値の合計出現数を返す
-    - rangelist(T,s,e,x,y) T[s,e]中に出現するx<=c<yを満たす値を頻度とともに列挙する
-    - rangemaxk(T,s,e,k) T[s,e]中に出現する値を大きい順にその頻度とともにk個返す
-    - rangemink(T,s,e,k) T[s,e]中に出現する値を小さい順にその頻度とともにk個返す
-    - prevvalue(T,s,e,x,y) T[s,e]中にx<=c<yを満たす最大のcを返す
-    - nextvalue(T,s,e,x,y) T[s,e]中にx<=c<yを満たす最小のcを返す
-    - intersect(T,s1,e1,s2,e2) T[s1,e1]とT[s2,e2]の間で共通して出現する値と頻度を返す
+    - get(i)
+        : B[i] を返す．
 
-/*
-    - WaveletMatrix wv(n) 要素数nのWaveletMatrixを構築する(要素は0以上であることを仮定)
-    - wv.set(i,x) i番目の要素にxを代入する
-    - wv.build() データ構造を構築する(これ以降setは使えない)
-    - wv.accsess(k) k番目の要素の値を得る
-    - wv.kth_smallest(l,r,k) [l,r)の範囲でk(0-indexed)番目に小さい値を返す
-    - wv.kth_largest(l, r, k)　[l, r)の範囲でk(0-indexed)番目に大きい値を返す
-    - wv.range_freq(l, r, upper) [l, r)の範囲でupper未満の要素の個数を返す
-    - wv.prev_value(l, r, lower) l, rの範囲でupper未満の最後の値を返す
-    - wv.next_value(l, r, lower): l, rの範囲でlower以上の最初の値を返す
+    - set(i)
+        : B[i] を 1 にする．
 
+    - build()
+        : rank を高速に求めるための前計算を行う．
+
+    - rank1(i)
+        : B[0, i) に含まれる 1 の個数を返す．
+
+    - rank0(i)
+        : B[0, i) に含まれる 0 の個数を返す．
+
+    ※ この実装には select はない．
+
+<WaveletMatrix<T>>
+    非負整数列 a に対して以下の操作を提供する．
+    区間はすべて半開区間 [l, r) で扱う．
+
+    - WaveletMatrix(n)
+        : 長さ n の Wavelet Matrix を作る．
+          set(i, x) で値を代入した後，build() を呼ぶ．
+
+    - WaveletMatrix(vector<T> a)
+        : 配列 a から Wavelet Matrix を構築する．
+
+    - set(i, x)
+        : i 番目の要素に x を代入する．
+          x は 0 以上である必要がある．
+          build() 前に使う．
+
+    - build()
+        : データ構造を構築する．
+          基本的に build() 後は set() で値を変更しない．
+
+    - access(k)
+        : a[k] を復元して返す．
+          計算量 O(log A)．
+
+    - kth_smallest(l, r, k)
+        : a[l, r) の中で k 番目に小さい値を返す．
+          k は 0-indexed．
+          計算量 O(log A)．
+
+    - kth_largest(l, r, k)
+        : a[l, r) の中で k 番目に大きい値を返す．
+          k は 0-indexed．
+          計算量 O(log A)．
+
+    - range_freq(l, r, upper)
+        : a[l, r) の中で upper 未満の要素数を返す．
+          つまり，
+              #{ i | l <= i < r, a[i] < upper }
+          を返す．
+          計算量 O(log A)．
+
+    - range_freq(l, r, lower, upper)
+        : a[l, r) の中で lower <= a[i] < upper を満たす要素数を返す．
+          計算量 O(log A)．
+
+    - prev_value(l, r, upper)
+        : a[l, r) の中で upper 未満の値のうち最大のものを返す．
+          存在しない場合は T(-1) を返す．
+          計算量 O(log A)．
+
+    - next_value(l, r, lower)
+        : a[l, r) の中で lower 以上の値のうち最小のものを返す．
+          存在しない場合は T(-1) を返す．
+          計算量 O(log A)．
+
+<計算量>
+    - build()
+        : O(N log A)
+
+    - access(k)
+        : O(log A)
+
+    - kth_smallest(l, r, k)
+        : O(log A)
+
+    - kth_largest(l, r, k)
+        : O(log A)
+
+    - range_freq(l, r, upper)
+        : O(log A)
+
+    - range_freq(l, r, lower, upper)
+        : O(log A)
+
+    - prev_value(l, r, upper)
+        : O(log A)
+
+    - next_value(l, r, lower)
+        : O(log A)
+
+<備考>
+    - この実装では，列の要素は 0 以上であることを仮定する．
+    - 区間は [l, r) で扱う．
+    - k は 0-indexed．
+    - rank_c, select_c, topk, sum, rangelist, intersect などは
+      このコードには実装されていない．
+    - T(-1) を番兵として返す関数があるため，T を unsigned 型にすると扱いに注意が必要．
 */
 
 
 // 参照:https://miti-7.hatenablog.com/entry/2018/04/28/152259#%E3%81%84%E3%82%8D%E3%81%84%E3%82%8D%E3%81%AA%E4%BA%BA%E3%81%AE%E5%AE%9F%E8%A3%85
 
-
-
-//実装例(Nyaan's library)
 
 struct bit_vector {
   using u32 = uint32_t;

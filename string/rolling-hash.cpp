@@ -1,122 +1,39 @@
-//Rolling Hash
 /*
-高速に文字列検索を行うための方法(O(n+m))
-任意のa,b(a<=b)について、hash([a,b])をO(1)で求められる(ハッシュの作り方より[0,b],[0,a-1]から[a,b]が)
+  <Rolling Hash>
+    - 文字列sに対して，sの部分文字列s[a,b]に対するhashを計算
 
-m文字の文字列Aに対し、互いに素な基数(base = b)とmod p を取って、
-hash(A) = (A_0*b^(m-1) + A_1*b^(m-2) + ... + A_(m-1)*b^0) mod p
-とする。(ここでA_iは、Aのi文字目に対応したある値とする 例えばA_i-'a'など)
+    [実装/関数]
+        - RollingHash<Str> rh(Str S)
+            : Sに対するRollingHashの構築 (Strはstringやvector<int>など)
+        - void build(Str S) : (コンストラクタにおいてSを指定していなかった場合) Sに対して構築をする
+        - Hash get(int l, int r) : 区間[l,r) のハッシュを返す
+        - Hash get_hash(Str T) : 文字列Tのハッシュ値を返す
+        - int find(Str T, int lower = 0) : Sのlower文字以降で初めてTが出てくる位置(Tの最初の文字のindex)を返す(存在しないなら-1を返す)
+        - int LCP(int a, int b, int al, int bl)
+            : aのal文字目から始まるsuffixとbのbl文字目から始まるsuffixのLCPを返す
+        - int strcmp(int a, int b, int al, int bl, int ar = -1, int br = -1)
+            : a[al,ar) と b[bl,br) の代償を比較する(返り値はstd::strcmpの仕様に準ずる。)
+        - int size() : Sのサイズを返す
 
-hが十分に大きい時はハッシュ値の衝突はほとんど起こりにくいと考えられる。
-→文字列の一致検証がO(n)からO(1)に高速化できる
+        - Hash : array<u64, BASE_NUM> である．BASE_NUMの個数だけhash値を保持している．
 
-- pは2^61-1を用いると安全らしい
-- 
+    [計算時間]
+        - O(n+m)
+    
+    [備考]
+        - BASE_NUM は同時に持つ独立ハッシュの個数(デフォルトは2)
+    
+    [参照]
+        - https://bakamono1357.hatenablog.com/entry/2020/04/29/025320
+        - https://algo-logic.info/bridge-lowlink/
 
+    [verified at]
+        - https://onlinejudge.u-aizu.ac.jp/courses/library/4/CGL/all
+    
+    [使用例]
+        
+        
 */
-//実装例
-//baseはstruct内で決める
-//modはusingに書いてある
-class RollingHash {
-    static const uint64_t mod = (1ull << 61ull) - 1;
-    vector<uint64_t> power;
-    const uint64_t base;
-
-    //1以上mod - 1以下のランダムなbaseを生成
-    static inline uint64_t generate_base() {
-        mt19937_64 engine(chrono::steady_clock::now().time_since_epoch().count());
-        uniform_int_distribution<uint64_t> rand((uint64_t)1,(uint64_t)mod - 1);
-        return rand(engine);
-    }
-
-    //足し算
-    static inline uint64_t add(uint64_t a, uint64_t b) {
-        if((a += b) >= mod) a -= mod;
-        return a;
-    }
-
-    //掛け算（__uint128_tを使用）
-    static inline uint64_t mul(uint64_t a, uint64_t b) {
-        __uint128_t c = (__uint128_t) a * b;
-        return add(c >> 61,c & mod);
-    }
-
-    inline void expand(size_t sz) {
-        if(power.size() < sz + 1) {
-            int pre_sz = (int)power.size();
-            power.resize(sz + 1);
-            for(int i = pre_sz - 1;i < sz;i++) {
-                power.at(i + 1) = mul(power.at(i),base);
-            }
-        }
-    }
-
-public:
-
-    explicit RollingHash(uint64_t base = generate_base()) : base(base),power{1} {}
-
-    //文字列Sのハッシュを返す
-    vector<uint64_t> build(string S) {
-        vector<uint64_t> hash(S.size() + 1);
-        for (int i = 0; i < S.size(); i++) {
-            hash.at(i + 1) = add(mul(hash.at(i),base),S.at(i));
-        }
-        return hash;
-    }
-
-    //hashの[l,r)のハッシュ値を返す
-    uint64_t get(vector<uint64_t> &hash,int l,int r) {
-        expand(r - l);
-        return add(hash.at(r),mod - mul(hash.at(l),power.at(r - l)));
-    }
-
-    //ハッシュ値h1と長さh2lenのハッシュ値h2を結合
-    uint64_t connect(uint64_t h1, uint64_t h2, size_t h2len) {
-        expand(h2len);
-        return add(mul(h1, power.at(h2len)), h2);
-    }
-
-    //hash1の区間[l1,r1)とhash2の区間[l2,r2)のlcp（最長共通接頭辞）の長さを返す
-    int LCP(vector<uint64_t> &hash1,int l1,int r1,vector<uint64_t> &hash2,int l2,int r2) {
-        int len = min(r1 - l1,r2 - l2);
-        int ok = 0;
-        int ng = len + 1;
-        int mid;
-        while(ng - ok > 1) {
-            mid = (ok + ng) / 2;
-            if(get(hash1,l1,l1 + mid) == get(hash2,l2,l2 + mid)) ok = mid;
-            else ng = mid;
-        }
-        return ok;
-    }
-};
-
-string T,P;
-    cin >> T >> P;
-    if(T.size() < P.size()) return 0;
-    RollingHash rh; 
-    vector<uint64_t> t = rh.build(T); //ハッシュテーブルを作って返す
-    vector<uint64_t> p = rh.build(P);
-    uint64_t cnt = rh.get(p,0,P.size()); //
-    for(int i = 0;i < T.size() - P.size() + 1;i++) {
-        if(rh.get(t,i,i + P.size()) == cnt) cout << i << endl;
-            }
-
-
-string s="strangeorange";
-string t="strongrange";
-RollingHash rh; //準備
-vector<uint64_t> t = rh.build(T); //ハッシュテーブルを作って返す(rhは他の文字列に対しても繰り返し使う)
-rh.get(p,l,r) //ハッシュテーブルpに対して、区間[l,r)のハッシュ値を求めるO(N)
-rh.connect(h1,h2,h2len) //ハッシュテーブルh1と、長さh2lenのハッシュテーブルh2を結合する(O(1))
-LCP(h1,l1,r1,h2,l2,r2) //ハッシュテーブルh1の元の文字列の部分区間区間[l1,r1)と、ハッシュテーブルh2の元の文字列の部分区間区間[l2.r2)の最長共通接頭辞の長さを求める(O(logn))
-
-
-////上で書いたものは壊れていそう??
-
-
-
-//Nyaan's library
 
 
 namespace internal1 {
@@ -314,18 +231,3 @@ struct RollingHash {
 
   int size() const { return s; }
 };
-
-template <typename Str, int BASE_NUM>
-typename RollingHash<Str, BASE_NUM>::Hash RollingHash<Str, BASE_NUM>::basis =
-    internal1::Hash<BASE_NUM>::get_basis();
-using roriha = RollingHash<string, 2>;
-
-// RollingHash<string> rh(S): コンストラクタ。Sを対象としたRollingHashを構築する。
-// build(S): Sを対象としたRollingHashを構築する。
-// get(l, r): 区間[l, r)のハッシュを返す。 (0-indexed)
-// get_hash(T): Tのハッシュ値を返す。
-// find(T, lower = 0): Sのlower文字目以降で初めてTが出てくる位置を返す。(存在しない場合は-1を返す。)
-// LCP(a, b, al, bl): aのal文字目から始まるsuffixとbのb文字目から始まるsuffixのLCPを返す。
-// strcmp(a, b, al, bl, ar=-1, br=-1): a[al, ar)とb[bl, br)の大小を比較する。(返り値はstd::strcmpの仕様に準ずる。)
-// size(): Sのサイズを返す。
-

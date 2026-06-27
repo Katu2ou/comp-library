@@ -1,3 +1,34 @@
+/*
+  <scc>
+    - 強連結成分分解をする
+
+    [実装/関数]
+       - scc_graph graph(int n) : n頂点0辺の有向グラフを作る
+       - void graph.add_edge(int from, int to) : 頂点fromから頂点toへ有向辺を足す
+       - vector<vector<int>> graph.scc() 
+            : 次の条件を満たすような「頂点のリスト」のリストを返す
+                - 全ての頂点がちょうど1つずつどれかのリストに含まれている
+                - 内側のリストと強連結成分が一対一に対応する
+                - リストはトポロジカルソートされている(異なる強連結成分に属するa,bであって，
+                    aからbに到達可能なら，aはbよりも前に存在する)
+
+    [計算時間]
+
+
+    [備考]
+
+
+    [参照]
+        -
+
+    [verified at]
+        -
+
+    [使用例]
+
+
+*/
+
 namespace internal {
 
 template <class E> struct csr {
@@ -92,7 +123,6 @@ struct scc_graph {
 
 }  // namespace internal
 
-namespace atcoder{
 struct scc_graph {
   public:
     scc_graph() : internal(0) {}
@@ -110,4 +140,4 @@ struct scc_graph {
   private:
     internal::scc_graph internal;
 };
-}
+

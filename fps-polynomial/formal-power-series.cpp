@@ -1,6 +1,40 @@
 /*
-  - montgomery modint付き
-  - fpsの*,/,inv,exp,logが入っている
+<fpsライブラリ>
+  -
+
+  [実装/関数]
+    - using mint = LazyMontgomeryModInt<1000000007>; ここで法を変更
+    - using fps  = FormalPowerSeries<mint>;
+    - fps f : 仮のfpsインスタンスを作成
+    - fps g(5) : 長さ5(4次まで) 0で初期化
+    - fps h = {1, 2, 3} : 1+2x+3x^2
+    - f.resize(10) : サイズ変更
+    - f + g / f - g / f += g / f -= g
+    - f *= mint(c) 
+    - f * g / f/g / f % g
+    - f.shrink()  : 末尾の0を削る
+    - f.pre(sz) : 先頭sz項を取得
+    - f.rev() : 係数列を反転
+    - g = f << k : x^k 倍 (f.sizeはk増加) (1+x+2x^2 -> 0 + x + x^2 + 2x^3)
+    - g = f >> k : x^(-k) 倍 (f.sizeはk減少) (1+x+2x^2 -> 1 + 2x)
+    - f.diff() : 微分
+    - f.integral() :積分
+    - f.eval(x) 点評価(xはmint)
+    - f.inv(deg = -1) : f[0]!=0のとき，返り値をdeg次まで削ったもの
+    - f.log(deg = -1) : f[0]==1
+    - f.exp(deg = -1) : f[0]==0
+    - f.pow(int64_t k, deg = -1)
+
+  [計算時間]
+
+  [備考]
+      - int * mint は不可能! mint * int の順で
+
+  [参照]
+      -
+
+  [verified at]
+      -
 
 */
 

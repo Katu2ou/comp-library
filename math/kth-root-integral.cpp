@@ -2,7 +2,6 @@
 - 整数aのk乗根(切り捨て)を求める (a,kはuint64の範囲)
 */
 
-
 uint64_t kth_root_integral(uint64_t a, uint64_t k) {
   if (a <= 1 || k == 1) return a;
   if (64 <= k) return 1;

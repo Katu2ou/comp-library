@@ -1,6 +1,5 @@
-//https://qiita.com/drken/items/3beb679e54266f20ab63#7-%E6%B4%BB%E7%94%A8%E4%BE%8B-4-%E9%AB%98%E9%80%9F%E3%83%A1%E3%83%93%E3%82%A6%E3%82%B9%E5%A4%89%E6%8F%9B%E3%81%A8%E7%B4%84%E6%95%B0%E7%B3%BB%E5%8C%85%E9%99%A4%E5%8E%9F%E7%90%86
-//色々機能を持ったEratosthenes's sieve
 /*
+  <エラトステネスの篩>
     - 整数nに対し，2以上n以下の整数に対するエラトステネスの篩を実行する
     - 篩を実行した際に，各整数が素数であるかのbool表/整数を割り切る最小の素数/n以下の値に対するメビウス関数値/
     
@@ -16,6 +15,37 @@
         - 特に，整数mに対してmの約数kに対してのみF(k)が非零の場合は，各約数kに対する
         f(k)の値をO((logk)^2)で計算できる(実装)
 
+    [実装/関数]
+        - Eratosthenes er(int n) : 1以上n以下の整数に対して篩を適用する．
+            er.isprime : 素数ならtrueを，そうでないならfalseを持つ配列
+            er.minfactor : 素数なら-1を(?)，そうでないならその値を割り切る2以上の最小の整数を持つ配列
+        - vector<pair<int,int>> er.factorize(int n) : nの素因数分解を{素数,指数}の配列で返す
+        - vector<int> er.divisor(int n) : nの約数を配列で返す
+        - void fast_zeta(vector<T> f, vector<bool> isprime)
+            : 配列fを(0-indexedとして)倍数ゼータ変換する．ここでisprimeはfの配列長のものを渡す．
+        - void fast_mobius(vector<T> F, vector<bool> isprime)
+            : 配列Fを(0-indexedとして)倍数メビウス変換する．
+        - void fast_zeta_M(vector<T> f, int m, vector<pair<int,int>> fact, vector<int> divisor)
+            : 配列fを(0-indexedとして)mの約数の範囲で倍数ゼータ変換する．ここでfact,divisorはmに対応するもの．
+        - void fast_mobius_M(vector<T> F, int m, vector<pair<int,int>> fact, vector<int> divisor)
+            : 配列Fを(0-indexedとして)mの約数の範囲で倍数ゼータ変換する．ここでfact,divisorはmに対応するもの．
+                
+    [計算時間]
+        - isprime : O(nloglogn)
+        - factorize, divisor : O(log n)
+        - 
+    
+    [備考]
+        - //https://qiita.com/drken/items/3beb679e54266f20ab63#7-%E6%B4%BB%E7%94%A8%E4%BE%8B-4-%E9%AB%98%E9%80%9F%E3%83%A1%E3%83%93%E3%82%A6%E3%82%B9%E5%A4%89%E6%8F%9B%E3%81%A8%E7%B4%84%E6%95%B0%E7%B3%BB%E5%8C%85%E9%99%A4%E5%8E%9F%E7%90%86
+    
+    [参照]
+        - 
+
+    [verified at]
+        - 
+    
+    [使用例] 
+        
 */
 
 struct Eratosthenes {
@@ -97,8 +127,6 @@ template<class T> void fast_mobius(vector<T> &F, vector<bool> &isprime) {
         }
     }
 }
-
-
 
 // f -> F (ある正の整数Mの約数に対して)
 // Mを素因数分解したものと，Mの約数列を与える

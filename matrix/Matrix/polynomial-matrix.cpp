@@ -1,1 +1,0 @@
-// https://nyaannyaan.github.io/library/matrix/polynomial-matrix-determinant.hpp

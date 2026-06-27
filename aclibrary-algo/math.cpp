@@ -1,3 +1,39 @@
+/*
+  <Math>
+    - 
+
+    [実装/関数]
+        - ll pow_mod(ll x, ll n, int m) : x^n mod m を返す (0<=n,1<=m)
+        - ll inv_mod(ll x, ll m) : x^{-1} mod m を返す
+        - pair<ll,ll> crt(vector<ll> r, vector<ll> m)
+            : 同じ長さの配列r,mを渡す．連立方程式
+                x = r[i] (mod m[i])
+            を解く．答えが存在するなら，0 <= y < z = lcm(m[i]), x = y (mod z)
+            を満たす(y,z)を返す．答えがない場合は(0,0)を返す．n=0のときは(0,1)を返す．
+        - ll floor_sum(ll n, ll m, ll a, ll b)
+            : \sum_{i=0}^{n-1} \lfloor \frac{a*i+b}{m} \rfloor
+            の値を返す．答えがオーバーフローしたならmod2^64で正しい値を返す．
+            (0<=n<2^32, 1<=m<2^32)        
+
+    [計算時間]
+        - crt : O(n log(lcm(m[i])) ) 
+        - floor_sum : O(log m)
+
+    [備考]
+        - 
+    
+    [参照]
+        - 
+
+    [verified at]
+        - 
+    
+    [使用例]
+        
+        
+*/
+
+
 namespace internal {
 
 // @param m `1 <= m`
@@ -168,7 +204,6 @@ template <int m> constexpr int primitive_root = primitive_root_constexpr(m);
 
 }  // namespace internal
 
-namespace atcoder {
 
 long long pow_mod(long long x, long long n, int m) {
     assert(0 <= n && 1 <= m);
@@ -256,5 +291,3 @@ long long floor_sum(long long n, long long m, long long a, long long b) {
     ans += floor_sum(y_max, a, m, (a - x_max % a) % a);
     return ans;
 }
-
-}  // namespace atcoder

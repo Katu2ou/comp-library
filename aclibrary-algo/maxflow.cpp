@@ -1,3 +1,64 @@
+/*
+  <Math>
+    -
+
+    [実装/関数]
+        - mf_graph<Cap> graph(int n) : n頂点0辺のグラフを作る(Capは容量の型)
+            - Capはint or ll
+        - int graph.add_edge(int from, int to, Cap cap)
+            : fromからtoへ最大容量cap,流量0の辺を追加し，何番目に追加された辺か返す．
+            (0 <= cap)
+        - Cap graph.flow(int s, int t)
+            : sからtへ流せるだけ流し，流せた量を返す．
+        - Cap graph.flow(int s, int t, Cap flow_limit)
+            : sからtへ流量flow_limitに達するまで流せるだけ流し，流せた量を返す．
+            (s\neq t)
+        - vector<bool> graph.min_cut(int s)
+            : 長さnのvectorを返す．i番目の要素には，頂点sからiへ残余グラフで到達可能な時
+            のみtrueを返す．
+        - struct edge<Cap,Cost>::edge {
+            int from, to;
+            Cap cap, flow;
+        };
+            - mf_graph<Cap>::edge graph.get_edge(int i)
+            - vector<mf_graph<Cap>::edge> graph.edges()
+                : 今の内部の辺の状態を返す(辺を追加した順)
+        - void graph.change_edge(int i, Cap new_cap, Cap new_flow) 
+            : i番目に追加された辺の容量,流量を変更する．
+
+        - struct residual_edge {
+                int to;
+                Cap cap;
+            };
+        - vector<vector<residual_edge>> graph.residual_graph()
+            : 現在の残余グラフを返す．
+              返り値の[v]には，残余グラフにおいてvから出る辺が入る．
+              各辺eについて，
+                - e.to   : 行き先
+                - e.cap  : 残余容量
+              を表す．
+              残余容量が正の辺のみを返す．
+
+
+    [計算時間]
+        - add_edge : ならしO(1)
+        - flow :  辺の容量が全て1ならO(min(n^{2/3}m, m^{3/2}))
+                  一般にはO(n^2m)
+        - min_cut : O(n+m)
+
+    [備考]
+        
+
+    [参照]
+        -
+
+    [verified at]
+        -
+
+    [使用例]
+
+
+*/
 
 namespace internal {
 
@@ -17,6 +78,7 @@ template <class T> struct simple_queue {
 };
 
 }  // namespace internal
+
 template <class Cap> struct mf_graph {
   public:
     mf_graph() : _n(0) {}
@@ -141,6 +203,25 @@ template <class Cap> struct mf_graph {
             }
         }
         return visited;
+    }
+
+    struct residual_edge {
+        int to;
+        Cap cost; // 残余容量
+    };
+
+    std::vector<std::vector<residual_edge>> residual_graph() const {
+        std::vector<std::vector<residual_edge>> res(_n);
+
+        for (int v = 0; v < _n; v++) {
+            for (const auto& e : g[v]) {
+                if (e.cap > 0) {
+                    res[v].push_back(residual_edge{e.to, e.cap});
+                }
+            }
+        }
+
+        return res;
     }
 
   private:
